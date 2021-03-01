@@ -1,0 +1,77 @@
+ADD X7, XZR, XZR
+
+ADDI X9, XZR, #2
+STUR X9, [X7, #0]
+
+ADDI X9, XZR, #5
+STUR X9, [X7, #8]
+
+ADDI X9, XZR, #1
+STUR X9, [X7, #16]
+
+ADDI X9, XZR, #4
+STUR X9, [X7, #24]
+
+ADDI X9, XZR, #0
+STUR X9, [X7, #32]
+
+ADDI X9, XZR, #12
+STUR X9, [X7, #40]
+
+ADDI X9, XZR, #-1
+STUR X9, [X7, #48]
+
+
+
+
+ADDI X5, XZR, #7
+ADD x6, X5, XZR
+
+B select_sort_loop
+
+select_sort_loop:
+SUBIS XZR, X5, #1
+B.LE quit
+B find_smallest
+
+rest_of_sort:
+LSL X9, X0, #3
+ADD X9, X7, X9
+LDUR X11, [X9, #0]
+LDUR X10, [X7, #0]
+STUR X11, [X7, #0]
+STUR X10, [X9, #0]
+ADDI X7, X7, #8
+SUBI X5, X5, #1
+B select_sort_loop
+
+
+
+
+
+find_smallest:
+LDUR X9, [X7, #0]
+ADD X10, XZR, XZR
+ADD X0, XZR, XZR
+B for_loop
+
+for_loop:
+SUBS XZR, X10, X5
+B.GE rest_of_sort
+LSL X11, X10, #3
+ADD X11, X7, X11
+LDUR X11, [X11, #0]
+SUBS XZR, X11, X9
+B.GE extra
+ADD X0, X10, XZR
+ADD X9, X11, XZR
+B extra
+
+extra:
+ADDI X10, X10, #1
+B for_loop
+
+quit:
+LSL X9, X6, #3
+SUB X7, X7, X9
+DUMP
