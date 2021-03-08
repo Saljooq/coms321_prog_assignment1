@@ -1,77 +1,70 @@
-ADD X7, XZR, XZR
+ADD X7, XZR, XZR    //Set X7 = 0, X7 will be the register for the array
 
-ADDI X9, XZR, #2
-STUR X9, [X7, #0]
+ADDI X9, XZR, #2    //Set X9 = 2
+STUR X9, [X7, #0]   //Store 2 in first array position (array[0] = 2)
 
-ADDI X9, XZR, #5
-STUR X9, [X7, #8]
+ADDI X9, XZR, #5    //Set X9 = 5
+STUR X9, [X7, #8]   //Store 5 in second array position (array[1] = 5)
 
-ADDI X9, XZR, #1
-STUR X9, [X7, #16]
+ADDI X9, XZR, #1    //Set X9 = 1
+STUR X9, [X7, #16]  //Store 1 in third array position (array[2] = 1)
 
-ADDI X9, XZR, #4
-STUR X9, [X7, #24]
+ADDI X9, XZR, #4    //Set X9 = 4
+STUR X9, [X7, #24]  //Store 4 in fourth array position (array[3] = 4)
 
-ADDI X9, XZR, #0
-STUR X9, [X7, #32]
+ADDI X9, XZR, #0    //Set X9 = 0
+STUR X9, [X7, #32]  //Store 0 in fifth array position (array[4] = 0)
 
-ADDI X9, XZR, #12
-STUR X9, [X7, #40]
+ADDI X9, XZR, #12   //Set X9 = 12
+STUR X9, [X7, #40]  //Store 12 in sixth array position (array[5] = 12)
 
-ADDI X9, XZR, #-1
-STUR X9, [X7, #48]
+ADDI X9, XZR, #-1   //Set X9 = -1
+STUR X9, [X7, #48]  //Store -1 in seventh array position (array[6] = -1)
 
+ADDI X5, XZR, #7    //Set X5 = 7 which is the array size
+ADD x6, X5, XZR     //X6 is equal to the array size
 
+B select_sort_loop  //Branch to selection sort loop
 
+select_sort_loop:   //Label for selection sort loop
+SUBIS XZR, X5, #1   //Subtract 1 from X5 and set flag
+B.LE quit           //If X5 - 1 is less than or equal to 0 branch to quit
+B find_smallest     //X5 - 1 must not be less than or equal to 0 so branch to find_smallest
 
-ADDI X5, XZR, #7
-ADD x6, X5, XZR
+rest_of_sort:       //Begin rest of sort--here we will do a swap
+LSL X9, X0, #3      //X0 holds the current position in the array, multiply X0 by 8 and store it in X9
+ADD X9, X7, X9      //Get address for next array value by adding offset to current array address and store in X11
+LDUR X11, [X9, #0]  //Load array value at address stored in X9 into X11
+LDUR X10, [X7, #0]  //Load array value at address stored in X7 into X11
+STUR X11, [X7, #0]  //Store array value from X7 at offset of 0 in X11 
+STUR X10, [X9, #0]  //Store array value from X9 at offset of 0 in X10 -- the values in the array have been swapped
+ADDI X7, X7, #8     //Set address in array to next position
+SUBI X5, X5, #1     //Decrement X5 by 1 (subtracting 1 from array size)
+B select_sort_loop  //Branch to selection sort
 
-B select_sort_loop
+find_smallest:      //Beginning of find smallest function, trying to find smallest number in array
+LDUR X9, [X7, #0]   //Load the value of array[0] into X9
+ADD X10, XZR, XZR   //Set X10 = 0
+ADD X0, XZR, XZR    //Set X0 = 0
+B for_loop          //Branch to for_loop
 
-select_sort_loop:
-SUBIS XZR, X5, #1
-B.LE quit
-B find_smallest
+for_loop:           //Begin for loop
+SUBS XZR, X10, X5   //Subtract X10 - X5 and set flag
+B.GE rest_of_sort   //If X10 - X5 is greater than or equal to 0 branch to rest_of_sort
+LSL X11, X10, #3    //X10 - X5 was not greater than or equal to 0 so multiply X10 by 8 and store it in X11
+ADD X11, X7, X11    //Get address for next array value by adding offset to current array address and store in X11
+LDUR X11, [X11, #0] //Load the value of the next array position in X11
+SUBS XZR, X11, X9   //Subtract X11 - X9 and set flags
+B.GE extra          //If X11 - X9 is greater than or equal to zero branch to extra -- didn't find smaller value
+ADD X0, X10, XZR    //Otherwise, we found smaller value; set X0 = X10 (X10 should have position in the array that we are at)
+ADD X9, X11, XZR    //Set X9 = X11 (X11 should have value of the current position in the array)
+B extra             //Branch to extra
 
-rest_of_sort:
-LSL X9, X0, #3
-ADD X9, X7, X9
-LDUR X11, [X9, #0]
-LDUR X10, [X7, #0]
-STUR X11, [X7, #0]
-STUR X10, [X9, #0]
-ADDI X7, X7, #8
-SUBI X5, X5, #1
-B select_sort_loop
+extra:              //Begin extra
+ADDI X10, X10, #1   //Set X10 = X10 + 1, meaning advance to next position in the array
+B for_loop          //Loop through for_loop again
 
-
-
-
-
-find_smallest:
-LDUR X9, [X7, #0]
-ADD X10, XZR, XZR
-ADD X0, XZR, XZR
-B for_loop
-
-for_loop:
-SUBS XZR, X10, X5
-B.GE rest_of_sort
-LSL X11, X10, #3
-ADD X11, X7, X11
-LDUR X11, [X11, #0]
-SUBS XZR, X11, X9
-B.GE extra
-ADD X0, X10, XZR
-ADD X9, X11, XZR
-B extra
-
-extra:
-ADDI X10, X10, #1
-B for_loop
-
-quit:
-LSL X9, X6, #3
-SUB X7, X7, X9
+quit:               //Selection sort has been completed and the array should be in sorted order from low to high
+LSL X9, X6, #3      //Take array size * 8 and store it in X9
+SUB X7, X7, X9      //Subtract total byte size of array from the address the array is currently at
 DUMP
