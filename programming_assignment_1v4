@@ -96,7 +96,6 @@ BR LR
 
 for_loop:           //Begin for loop
 SUBS XZR, X10, X5   //X15 stores the current_array size that we're looking the smallest num for, so we will stop sorting once our counter reaches X5
-
 B.LT continue_on  //If counter is less than the current_array size, we continue to look for the smallest
 BR LR                   //else we end the for loop and go back to remaining select_sort
 
@@ -126,7 +125,6 @@ B for_loop          //Loop through for_loop again
 ///////////////////////////////////////////////////////////////////
 
 swap:
-
 LSL X9, X0, #3       //X0 holds offset for the smallest num in the current_array, multiply X0 by 8 and store it in X9
 ADD X9, X7, X9       //Get the exact location of the smallest value in current_array, store it in X9
 LDUR X11, [X9, #0]   //Load smallest num in the current_array into X11
