@@ -21,7 +21,7 @@ STUR X9, [X7, #32]   //Store 3 in fifth array position (array[4] = 3)
 ADDI X9, XZR, #4     //Set X9 = 4
 STUR X9, [X7, #40]   //Store 4 in sixth array position (array[5] = 4)
 
-ADDI X9, XZR, #5     //Set X9 = 5
+ADDI X9, XZR, #-2     //Set X9 = 5
 STUR X9, [X7, #48]   //Store 5 in seventh array position (array[6] = 5)
 
 ADDI X6, XZR, #7      //X6 is equal to the array size
