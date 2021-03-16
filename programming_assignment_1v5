@@ -10,7 +10,7 @@ STUR X9, [X7, #0]    //Store 5 in first array position (array[0] = 5)
 ADDI X9, XZR, #4     //Set X9 = 4
 STUR X9, [X7, #8]    //Store 4 in second array position (array[1] = 4)
 
-ADDI X9, XZR, #7     //Set X9 = 3
+ADDI X9, XZR, #3     //Set X9 = 3
 STUR X9, [X7, #16]   //Store 3 in third array position (array[2] = 3)
 
 ADDI X9, XZR, #2     //Set X9 = 2
