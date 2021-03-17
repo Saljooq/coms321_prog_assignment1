@@ -3,7 +3,7 @@
 ///////////////////////////////////////////////////////////////
 //README:
 //MAIN: In the main we load value 5 to -1 into array X7, with size of the array in X6,
-// other than X6 and X7 used in main, all other X0-X7 registers are restored after being unsorted
+// other than X6 and X7 used in main, all other X0-X7 registers are restored after being used
 // in a procedure
 //SELECT_SORT: Takes an argument of an array in X7 and the size of the array in X6, it utilizes find_smallest
 // and swap procedure output a sorted array - and restores all registers X0 and X5 used to pass arguments
